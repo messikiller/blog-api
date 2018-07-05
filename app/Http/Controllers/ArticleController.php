@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Article;
+use App\Models\Category;
 
 class ArticleController extends Controller
 {
@@ -14,6 +15,11 @@ class ArticleController extends Controller
         $offset   = ($pageno - 1) * $pagesize;
 
         $query = Article::query()->with('cate', 'tags');
+
+        if (($cate_pid = $request->input('cate_pid', 0)) > 0) {
+            $cate_ids = Category::where('pid', '=', $cate_pid)->get()->pluck('id')->unique()->toArray();
+            count($cate_ids) > 0 && $query->whereIn('cate_id', $cate_ids);
+        }
 
         $list = $query->published()
             ->orderBy('created_at', 'desc')

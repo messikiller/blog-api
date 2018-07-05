@@ -13,3 +13,5 @@
 
 $router->get('/article/list', 'ArticleController@list');
 $router->get('/article/view', 'ArticleController@view');
+
+$router->get('/category/list', 'CategoryController@list');
